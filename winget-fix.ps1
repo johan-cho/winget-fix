@@ -18,7 +18,11 @@ function Install-Winget {
 
     Write-Host "Installing winget..." -ForegroundColor Green
     $latestVersion = (Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases/latest').tag_name
-    Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/download/$latestVersion/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile "$env:temp\WinGet.msixbundle"
+    $outFile = "$env:temp\WinGet.msixbundle"
+    if (!(Test-Path $outFile)) {
+        Write-Host "Downloading winget..." -ForegroundColor Yellow
+        Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/download/$latestVersion/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile $outFile
+    }
     try {
         Add-AppxPackage "$env:temp\WinGet.msixbundle" -ErrorAction Stop
     }
@@ -45,7 +49,9 @@ function Install-MSXML {
 
     Write-Host "Trying to install Microsoft.UI.Xaml package..." -ForegroundColor Yellow
     $zipPath = "$env:temp\microsoft.ui.xaml.zip"
-    Invoke-WebRequest -Uri "https://www.nuget.org/api/v2/package/Microsoft.UI.Xaml" -OutFile $zipPath
+    if (!(Test-Path $zipPath)) {
+        Invoke-WebRequest -Uri "https://www.nuget.org/api/v2/package/Microsoft.UI.Xaml" -OutFile $zipPath
+    }
     Expand-Archive $zipPath -DestinationPath $zipPath.TrimEnd(".zip") -Force
     Add-AppxPackage $(Get-ChildItem -Path "$($zipPath.TrimEnd(".zip"))\tools\AppX\x64\Release\" -Filter "*.appx")[0].FullName -ErrorAction Stop
     Remove-Item -Path $zipPath.TrimEnd(".zip") -Recurse -Force
