@@ -17,11 +17,10 @@ function Install-Winget {
     #>
 
     Write-Host "Installing winget..." -ForegroundColor Green
-    $latestVersion = (Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases/latest').tag_name
     $outFile = "$env:temp\WinGet.msixbundle"
     if (!(Test-Path $outFile)) {
         Write-Host "Downloading winget..." -ForegroundColor Yellow
-        Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/download/$latestVersion/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile $outFile
+        Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile $outFile
     }
     try {
         Add-AppxPackage $outFile -ErrorAction Stop
