@@ -23,13 +23,13 @@ function Install-Winget {
         Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile $outFile
     }
     try {
-        Add-AppxPackage "$env:temp\WinGet.msixbundle" -ErrorAction Stop
+        Add-AppxPackage $outFile -ErrorAction Stop
     }
     catch {
         Write-Host "Failed to install winget" -ForegroundColor Red
         Install-MSXML
         Write-Host "trying to install winget again..." -ForegroundColor Green
-        Add-AppxPackage "$env:temp\WinGet.msixbundle"
+        Add-AppxPackage $outFile
     }
     Write-Host "Finished" -ForegroundColor Green
 }
