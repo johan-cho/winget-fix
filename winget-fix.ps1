@@ -19,9 +19,10 @@ function Install-Winget {
     Write-Host "Installing winget..." -ForegroundColor Green
     $outFile = "$env:temp\WinGet.msixbundle"
     if (!(Test-Path $outFile)) {
-        Write-Host "Downloading winget..." -ForegroundColor Yellow
-        Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile $outFile
+        Remove-Item $outFile -Force -ErrorAction SilentlyContinue
     }
+    Write-Host "Downloading winget..." -ForegroundColor Yellow
+    Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile $outFile
     try {
         Add-AppxPackage $outFile -ErrorAction Stop
     }
