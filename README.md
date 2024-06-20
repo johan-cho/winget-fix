@@ -9,7 +9,7 @@ This script tries to reinstall winget.
 ## Running
 
 ```powershell
-.\fix-winget.ps1
+(invoke-webrequest https://raw.githubusercontent.com/johan-cho/winget-fix/master/winget-fix.ps1).content | powershell
 ```
 
 This script tries to install winget from the offical repository, which may fail because of a dependency on [`Microsoft.XAML.UI`](https://github.com/microsoft/microsoft-ui-xaml).
